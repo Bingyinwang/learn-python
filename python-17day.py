@@ -54,7 +54,21 @@ print(f'\033[31m{m}')
     除了基本颜色，ANSI颜色代码还支持一些特殊的样式，如加粗、下划线、闪烁等，这些样式也有对应的数字代码，可以与颜色代码组合使用。
 '''
 
-# 5 跑马灯文字  在终端运行效果更好
+# 5 生成随机验证码
+import random
+
+
+def generate_code(length=6):
+    code = ''
+    for _ in range(length):
+        code += random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+    return code
+
+
+code = generate_code()
+print('验证码:', code)
+
+# 6 跑马灯文字  在终端运行效果更好
 import os
 import time
 
@@ -63,8 +77,4 @@ while True:
     os.system('cls')
     print(text)
     text = text[1:] + text[0]
-    time.sleep(0.2)
-
-
-
-
+    time.sleep(0.1)
