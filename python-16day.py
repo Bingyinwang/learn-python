@@ -5,7 +5,7 @@
 
 # 1，图像的简单处理方法
 
-from PIL import Image, ImageFilter      # 导入相关库
+from PIL import Image, ImageFilter  # 导入相关库
 
 # *****************************************************************
 # 1.1 打开图像
@@ -39,15 +39,14 @@ image1.show()
 
 # 1.5 旋转和翻转
 image = Image.open('./动漫人物1.jpg')
-image = image.rotate(180).show()      # 旋转180
+image = image.rotate(180).show()  # 旋转180
 image.show()
 
-image1 = image.transpose(Image.FLIP_LEFT_RIGHT)   # 左右翻转
+image1 = image.transpose(Image.FLIP_LEFT_RIGHT)  # 左右翻转
 image1.show()
 
-image2 = image.transpose(Image.FLIP_TOP_BOTTOM)    # 上下翻转
+image2 = image.transpose(Image.FLIP_TOP_BOTTOM)  # 上下翻转
 image2.show()
-
 
 # 1.6 操作像素
 image = Image.open('./动漫人物1.jpg')
@@ -57,11 +56,50 @@ for x in range(400, 600):
 
 image.show()
 
-
 # 1.7 过滤效果
 image = Image.open('./动漫人物1.jpg')
 image.filter(ImageFilter.CONTOUR).show()  # 轮廓过滤器
-image.filter(ImageFilter.SHARPEN).show()    # 锐化过滤器
+image.filter(ImageFilter.SHARPEN).show()  # 锐化过滤器
+
+'''
+使用枕头绘图
+枕头有一个叫做ImageDraw模块的，该模块的Draw函数会返回一个ImageDraw对象，
+通过ImageDraw对象的arc、line、rectangle、ellipse、polygon等方法，
+可以在图像上发出圆弧、线条、形状、表面、抛光等形状，也可以通过该对象的text方法在图像上添加文字。
+'''
+import random
+from PIL import Image, ImageDraw, ImageFont
+
+
+def random_color():
+    # 随机生成颜色
+    red = random.randint(0, 255)
+    green = random.randint(0, 255)
+    blue = random.randint(0, 255)
+    return red, green, blue
+
+
+width, height = 800, 600
+image = Image.new(mode='RGB', size=(width, height), color=(255, 255, 255))
+drawer = ImageDraw.Draw(image)  # 创建一个绘图对象
+
+font = ImageFont.truetype('STCAIYUN.ttf', 50)  # 创建一个字体对象
+drawer.text((300, 50), 'WangBingYin', font=font, fill=random_color())  # 在图像上添加文字
+
+drawer.line((0, 0, width, height), fill=(255, 0, 255), width=3)  # 画一条直线
+drawer.line((width, 0, 0, height), fill=(255, 0, 255), width=3)  # 画一条直线
+
+# 画矩形
+xy = width // 2 - 100, height // 2 - 100, width // 2 + 100, height // 2 + 100
+drawer.rectangle(xy, outline=random_color(), width=3)
+
+for i in range(4):
+    left, top, right, bottom = 150 + i * 120, 220, 310 + i * 120, 380
+    drawer.ellipse((left, top, right, bottom), outline=random_color(), width=8)  # 画椭圆
+
+image.show()  # 显示图像
+image.save('wby.png')  # 保存图像
+
 # ****************************************************************************
 
 
@@ -70,40 +108,40 @@ image.filter(ImageFilter.SHARPEN).show()    # 锐化过滤器
 import datetime  # 导入datetime库
 from openpyxl import Workbook  # 导入openpyxl库
 
-wb = Workbook()    # 创建一个工作簿
-ws = wb.active     # ws = wb['Sheet']
+wb = Workbook()  # 创建一个工作簿
+ws = wb.active  # ws = wb['Sheet']
 # ws = wb.create_sheet('wby.xlsx')  # 或者创建一个名为wby的sheet
 ws['A1'] = 42
-ws.append([1, 2, 3])   # 在A1中写入42，在A2中写入1,2,3
-ws['A3'] = datetime.datetime.now()   # 在A3中写入当前时间
-wb.save('wby.xlsx')      # 保存Excel文件
+ws.append([1, 2, 3])  # 在A1中写入42，在A2中写入1,2,3
+ws['A3'] = datetime.datetime.now()  # 在A3中写入当前时间
+wb.save('wby.xlsx')  # 保存Excel文件
 
 # 2.2 处理Word文档
 from docx import Document  # 导入docx库
 from docx.shared import Inches
 
-doc = Document()     # 创建一个Word文档
+doc = Document()  # 创建一个Word文档
 
 doc.add_heading('Document Title', 0)  # 添加一个标题
 
 p = doc.add_paragraph('A plain paragraph having some ')  # 添加一个段落
-p.add_run('bold').bold = True   # 添加粗体字
+p.add_run('bold').bold = True  # 添加粗体字
 p.add_run(' and some ')  # 添加普通字
-p.add_run('italic.').italic = True   # 添加斜体字
+p.add_run('italic.').italic = True  # 添加斜体字
 
-doc.add_heading('Heading, level 1', level=1)   # 添加一个标题
+doc.add_heading('Heading, level 1', level=1)  # 添加一个标题
 
 doc.add_paragraph('Intense quote', style='Intense Quote')  # 添加一个引用段落
 
-doc.add_paragraph('有时候不喜欢你的人对你不好，其实就是对你好。', style='List Bullet')   # 添加一个无序列表
-doc.add_paragraph('Out of sight，out of love. （看不到了，也就不再爱了）', style='List Bullet')   # 添加一个无序列表
-doc.add_paragraph('每一个不曾起舞的日子，都是对生命的辜负。', style='List Bullet')   # 添加一个无序列表
+doc.add_paragraph('有时候不喜欢你的人对你不好，其实就是对你好。', style='List Bullet')  # 添加一个无序列表
+doc.add_paragraph('Out of sight，out of love. （看不到了，也就不再爱了）', style='List Bullet')  # 添加一个无序列表
+doc.add_paragraph('每一个不曾起舞的日子，都是对生命的辜负。', style='List Bullet')  # 添加一个无序列表
 
-doc.add_paragraph('人生最难的是遇见，更难的其实是重逢。', style='List Number')   # 添加一个有序列表
-doc.add_paragraph('世界上最可怕的人果然就是比自己还了解自己的人。', style='List Number')   # 添加一个有序列表
-doc.add_paragraph('不乱于心，不困于情，不畏将来，不念过往，如此，安好！', style='List Number')   # 添加一个有序列表
+doc.add_paragraph('人生最难的是遇见，更难的其实是重逢。', style='List Number')  # 添加一个有序列表
+doc.add_paragraph('世界上最可怕的人果然就是比自己还了解自己的人。', style='List Number')  # 添加一个有序列表
+doc.add_paragraph('不乱于心，不困于情，不畏将来，不念过往，如此，安好！', style='List Number')  # 添加一个有序列表
 
-doc.add_picture('./动漫人物1.jpg', width=Inches(3))   # 添加一张图片
+doc.add_picture('./动漫人物1.jpg', width=Inches(3))  # 添加一张图片
 
 records = (
     (1, '101', 'Banana'),
@@ -111,26 +149,26 @@ records = (
     (3, '303', 'Apples')
 )
 
-table = doc.add_table(rows=1, cols=3)   # 添加一个表格
+table = doc.add_table(rows=1, cols=3)  # 添加一个表格
 
-hdr_cells = table.rows[0].cells   # 获取表头单元格
-hdr_cells[0].text = 'Xh'   # 设置表头内容
-hdr_cells[1].text = 'Id'    # 设置表头内容
+hdr_cells = table.rows[0].cells  # 获取表头单元格
+hdr_cells[0].text = 'Xh'  # 设置表头内容
+hdr_cells[1].text = 'Id'  # 设置表头内容
 hdr_cells[2].text = 'Desc'  # 设置表头内容
 
 for xv, id, desc in records:
-    row_cells = table.add_row().cells   # 添加一行
-    row_cells[0].text = str(xv)   # 设置行内容
-    row_cells[1].text = id    # 设置行内容
+    row_cells = table.add_row().cells  # 添加一行
+    row_cells[0].text = str(xv)  # 设置行内容
+    row_cells[1].text = id  # 设置行内容
     row_cells[2].text = desc  # 设置行内容
 
-doc.add_page_break()   # 添加分页符
-doc.save('wby.docx')     # 保存Word文档
-
+doc.add_page_break()  # 添加分页符
+doc.save('wby.docx')  # 保存Word文档
 
 # 3，PDF的处理方法
 # 3.1 创建一个PDF文件
 from reportlab.pdfgen import canvas
+
 pdf = canvas.Canvas("wby.pdf")
 # 添加一个标题
 pdf.setTitle("My First PDF")
@@ -139,19 +177,18 @@ pdf.drawString(100, 750, "Hello, World!---------------------------")
 # 保存PDF文件
 pdf.save()
 
-
 # 4，PDF和Word的相互转换
 # 4.1 转换PDF到Word
 from pdf2docx import Converter
 import pdf2docx
+
 # PDF文件路径
 pdf_file = './wby.pdf'
 
 # 转换PDF到Word
 cv = Converter('./wby.pdf')  # 创建一个转换器对象
-cv.convert('by.docx')   # 转换PDF到Word
+cv.convert('by.docx')  # 转换PDF到Word
 cv.close()  # 关闭转换器对象
-
 
 # 4.2 转换Word到PDF
 from docx2pdf import convert
@@ -161,7 +198,5 @@ word_file = './wby.docx'
 
 # 转换Word到PDF
 convert(word_file, 'wby.pdf')
-
-
 
 # wangbingyin
