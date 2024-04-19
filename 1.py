@@ -176,4 +176,92 @@
 # subprocess.run(["python", "1.py"], check=True)
 #
 
+# *******************************************************************************************************
+import pyqrcode
 
+# 设置二维码信息
+s = "https://www.baidu.com"
+
+# 生成二维码
+url = pyqrcode.create(s)
+
+# 保存二维码
+url.svg("baidu.svg", scale=8)
+
+# 显示二维码
+url.show()
+
+# 打印二维码信息
+# print(url.terminal(quiet_zone=1))
+
+# 密码验证
+from flask import Flask, render_template_string, request, redirect, url_for
+
+app = Flask(__name__)
+
+# 假设的密码，实际应用中应使用更安全的方式存储和验证密码
+PASSWORD = "123456"
+
+# 模板字符串，用于渲染HTML页面
+template = """
+<!doctype html>
+<html>
+<head>
+    <title>Password Protected Content</title>
+</head>
+<body>
+    <h1>Enter Password</h1>
+    <form method="POST" action="{{ url_for('verify_password') }}">
+        <input type="password" name="password" required>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+"""
+
+
+@app.route('/')
+def index():
+    # 渲染登录页面
+    return render_template_string(template)
+
+
+@app.route('/verify', methods=['POST'])
+def verify_password():
+    # 获取用户输入的密码
+    password = request.form.get('password')
+
+    # 验证密码
+    if password == PASSWORD:
+        # 密码正确，重定向到内容页面或返回内容
+        return redirect(url_for('protected_content'))
+    else:
+        # 密码错误，返回错误信息
+        return "Incorrect password", 401  # HTTP状态码401表示未授权
+
+
+@app.route('/content')
+def protected_content():
+    # 保护的内容，这里只是一个示例页面
+    return 'China'
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+import pyqrcode
+from pyqrcode import QRCode
+
+# Flask应用的URL（确保这个URL是外部可访问的）
+url = "http://localhost:5000"  # 如果你的服务器部署在其他地方，替换为相应的URL
+
+# 生成二维码
+qr = QRCode(url, version=1)
+
+# 保存二维码为SVG文件
+qr.svg("password_protected_content.svg", scale=8)
+
+# 显示二维码
+qr.show()
