@@ -127,3 +127,21 @@ lab.pack()
 btn = Button(root, text='选择颜色', fg='blue', command=ys)
 btn.place(relx=0.01, rely=0.01)
 root.mainloop()
+
+# 按键响应
+from tkinter import *
+
+
+def show(event):
+    s = event.keysym
+    lab.config(text=s)
+
+
+root = Tk()
+root.title('按键响应')
+root.geometry('300x200')
+lab = Label(root, text='请点击键盘', font=('楷体', 30))
+lab.bind('<Key>', show)
+lab.focus_set()  # 使标签获取焦点
+lab.pack()
+root.mainloop()
